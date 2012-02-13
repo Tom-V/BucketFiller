@@ -1,20 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
-import net.minecraft.src.BlockContainer;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Material;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.TileEntity;
 import net.minecraft.src.forge.ITextureProvider;
 
 /**
  *
- * @author Administrator
+ * @author Pigalot
  */
 public class BlockBucketFiller extends BlockContainer implements ITextureProvider {
 
@@ -22,7 +14,6 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
 	super(i, Material.rock);
 			
 	setHardness(1F);
-	// TODO Auto-generated constructor stub
     }
     
     @Override

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.Block;
@@ -14,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 /**
  *
- * @author Administrator
+ * @author Pigalot
  */
 public class GuiBucketFiller extends GuiContainer{
 

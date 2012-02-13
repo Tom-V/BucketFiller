@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.mod_jBuildCraft_BucketFiller;
 
 /**
  *
- * @author Alex
+ * @author Pigalot
  */
 public class TileSelfPoweredFiller extends TileBucketFiller{
     @Override

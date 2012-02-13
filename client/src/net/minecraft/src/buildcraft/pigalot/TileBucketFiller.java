@@ -1,29 +1,16 @@
 package net.minecraft.src.buildcraft.pigalot;
 
 import java.util.Arrays;
-import net.minecraft.src.Block;
-import net.minecraft.src.BuildCraftEnergy;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ICrafting;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NBTTagList;
-import net.minecraft.src.buildcraft.api.API;
-import net.minecraft.src.buildcraft.api.APIProxy;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.IPowerReceptor;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.PowerFramework;
-import net.minecraft.src.buildcraft.api.PowerProvider;
-import net.minecraft.src.buildcraft.api.SafeTimeTracker;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
+import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.IMachine;
 import net.minecraft.src.buildcraft.factory.TileMachine;
 import net.minecraft.src.forge.ISidedInventory;
-import net.minecraft.src.mod_jBuildCraft_BucketFiller;
+import net.minecraft.src.*;
 
+/**
+ *
+ * @author Pigalot
+ */
 public class TileBucketFiller extends TileMachine
     implements IMachine, IPowerReceptor, ILiquidContainer, IInventory, ISidedInventory {
     

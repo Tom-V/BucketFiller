@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.EntityPlayer;
@@ -11,7 +7,7 @@ import net.minecraft.src.buildcraft.core.BuildCraftContainer;
 
 /**
  *
- * @author Administrator
+ * @author Pigalot
  */
 public class ContainerBucketFiller extends BuildCraftContainer{
     
@@ -47,5 +43,10 @@ public class ContainerBucketFiller extends BuildCraftContainer{
     @Override
     public void updateProgressBar(int i, int j) {		
 	tileBucketFiller.getGUINetworkData (i, j);
-    } 
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer entityplayer) {
+        return isUsableByPlayer(entityplayer);
+    }
 }

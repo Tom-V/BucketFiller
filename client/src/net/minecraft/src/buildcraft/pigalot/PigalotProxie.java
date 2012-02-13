@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.EntityPlayer;
@@ -10,7 +6,7 @@ import net.minecraft.src.buildcraft.api.APIProxy;
 
 /**
  *
- * @author Administrator
+ * @author Pigalot
  */
 public class PigalotProxie {
     

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.Block;
@@ -10,7 +6,7 @@ import net.minecraft.src.ItemStack;
 
 /**
  *
- * @author Alex
+ * @author Pigalot
  */
 public class ItemBucketFiller extends ItemBlock{
     
@@ -20,7 +16,7 @@ public class ItemBucketFiller extends ItemBlock{
         }
         
     @Override
-    public int getPlacedBlockMetadata(int i) {
+    public int getMetadata(int i) {
             return i;
     }
     

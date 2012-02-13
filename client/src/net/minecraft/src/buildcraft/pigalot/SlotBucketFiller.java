@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.EntityPlayer;
@@ -11,7 +7,7 @@ import net.minecraft.src.Slot;
 
 /**
  *
- * @author Administrator
+ * @author Pigalot
  */
 public class SlotBucketFiller extends Slot{
     
@@ -20,6 +16,7 @@ public class SlotBucketFiller extends Slot{
         super(iinventory, i, j, k);
     }
     
+    @Override
     public boolean isItemValid(ItemStack itemstack)
     {
         return false;

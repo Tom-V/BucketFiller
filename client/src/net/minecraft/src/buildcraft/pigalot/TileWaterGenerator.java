@@ -1,29 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.buildcraft.api.API;
-import net.minecraft.src.buildcraft.api.APIProxy;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.IPowerReceptor;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.PowerFramework;
-import net.minecraft.src.buildcraft.api.PowerProvider;
-import net.minecraft.src.buildcraft.api.SafeTimeTracker;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
+import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.IMachine;
 import net.minecraft.src.buildcraft.factory.TileMachine;
 import net.minecraft.src.mod_jBuildCraft_BucketFiller;
 
 /**
  *
- * @author Alex
+ * @author Pigalot
  */
 public class TileWaterGenerator  extends TileMachine
     implements IMachine, IPowerReceptor{

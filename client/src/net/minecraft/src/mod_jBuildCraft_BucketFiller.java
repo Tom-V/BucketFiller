@@ -2,12 +2,7 @@ package net.minecraft.src;
 
 import java.io.File;
 import net.minecraft.src.buildcraft.core.CoreProxy;
-import net.minecraft.src.buildcraft.pigalot.BlockBucketFiller;
-import net.minecraft.src.buildcraft.pigalot.GuiBucketFiller;
-import net.minecraft.src.buildcraft.pigalot.ItemBucketFiller;
-import net.minecraft.src.buildcraft.pigalot.TileBucketFiller;
-import net.minecraft.src.buildcraft.pigalot.TileSelfPoweredFiller;
-import net.minecraft.src.buildcraft.pigalot.TileWaterGenerator;
+import net.minecraft.src.buildcraft.pigalot.*;
 import net.minecraft.src.forge.Configuration;
 import net.minecraft.src.forge.Property;
 
@@ -176,7 +171,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
             ic2IsInstalled = true;
             //System.out.println("IC2 Worked lol");
         }
-        catch(Exception e){
+        catch(ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e){
             ic2IsInstalled = false;
         } 
         
@@ -188,7 +183,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     
     @Override
     public String getVersion() {
-        return "2.2.7";
+        return "2.2.12";
     }
     
     @Override
@@ -209,6 +204,5 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
 
     @Override
     public void load() {
-        return;
     }
 }
