@@ -22,7 +22,6 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
 	super(i, Material.rock);
 			
 	setHardness(1F);
-	// TODO Auto-generated constructor stub
     }
     
     @Override

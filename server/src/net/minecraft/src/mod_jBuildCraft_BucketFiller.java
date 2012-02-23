@@ -170,12 +170,17 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     }
     
     @Override
-    public String Version() {
-        return "2.2.7";
+    public String getVersion() {
+        return "2.2.12";
     }
     
     public String getPriorities() {
         return "after:mod_BuildCraftCore;after:mod_BuildCraftFactory;after:mod_BuildCraftTransport";
+    }
+
+    @Override
+    public void load() {
+        return;
     }
 
 }

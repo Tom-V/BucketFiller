@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.minecraft.src.buildcraft.pigalot;
 
 import net.minecraft.src.Block;
@@ -25,7 +21,7 @@ public class ItemBucketFiller extends ItemBlock{
     }
     
     @Override
-	public String func_35407_a(ItemStack itemstack) {
+	public String getItemNameIS(ItemStack itemstack) {
             String name = "";
             switch(itemstack.getItemDamage()) {
             case 0: {

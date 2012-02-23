@@ -54,4 +54,9 @@ public class ContainerBucketFiller extends BuildCraftContainer{
           
       }
     }  
+
+	@Override
+	public boolean canInteractWith(EntityPlayer entityplayer) {
+		return isUsableByPlayer(entityplayer);
+	}  
 }
