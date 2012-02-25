@@ -4,6 +4,7 @@ import java.io.File;
 import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.pigalot.*;
 import net.minecraft.src.forge.Configuration;
+import net.minecraft.src.forge.MinecraftForgeClient;
 import net.minecraft.src.forge.Property;
 
 /**
@@ -36,9 +37,12 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         super.ModsLoaded();
         BuildCraftCore.initialize();
         
+        MinecraftForgeClient.preloadTexture("/net/minecraft/src/buildcraft/pigalot/gui/block_textures.png");
+        
         BucketFillerConfiguration = new Configuration(new File(CoreProxy.getBuildCraftBase(), "config/bucketfiller.cfg"));
         BucketFillerConfiguration.load();
-        Property BucketFillerId = BucketFillerConfiguration.getOrCreateIntProperty("BucketFiller.id",Configuration.BLOCK_PROPERTY, 170);
+        
+        Property BucketFillerId = BucketFillerConfiguration.getOrCreateIntProperty("BucketFiller.id",Configuration.BLOCK_PROPERTY, 175);
         Property ic2Diamonds = BucketFillerConfiguration.getOrCreateBooleanProperty("UseIC2Diamonds", Configuration.GENERAL_PROPERTY, false);
         Property emptyBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("EmptyBucketEnergy",Configuration.GENERAL_PROPERTY, 20);
         Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy",Configuration.GENERAL_PROPERTY, 25);
@@ -48,6 +52,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
         ModLoader.RegisterBlock(blockBucketFiller);
+        
         
         ModLoader.RegisterTileEntity(TileBucketFiller.class,
 				"net.minecraft.src.buildcraft.pigalot.TileBucketFiller");
@@ -171,8 +176,16 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
             ic2IsInstalled = true;
             //System.out.println("IC2 Worked lol");
         }
-        catch(ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e){
+        catch(ClassNotFoundException e){
             ic2IsInstalled = false;
+        }catch(NoSuchFieldException e){
+        	ic2IsInstalled = false;
+        }catch(SecurityException e){
+        	ic2IsInstalled = false;
+        }catch(IllegalArgumentException e){
+        	ic2IsInstalled = false;
+        }catch(IllegalAccessException e){
+        	ic2IsInstalled = false;
         } 
         
        // if(!ic2IsInstalled)

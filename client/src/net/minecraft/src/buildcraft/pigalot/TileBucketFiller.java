@@ -1,5 +1,6 @@
 package net.minecraft.src.buildcraft.pigalot;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.IMachine;
@@ -18,7 +19,7 @@ public class TileBucketFiller extends TileMachine
     SafeTimeTracker updateNetworkTime = new SafeTimeTracker();
     private ItemStack[] BucketFillerStacks;
     private boolean _isActive;
-    public static int LIQUID_PER_SLOT = API.BUCKET_VOLUME * 10;
+    public static int LIQUID_PER_SLOT = BuildCraftAPI.BUCKET_VOLUME * 10;
     @TileNetworkData public int CookTime;
     public int RequiredCookTime;
     boolean hasPower;
@@ -178,7 +179,7 @@ public class TileBucketFiller extends TileMachine
             return;
         }
         
-        int liquidId = API.getLiquidForBucket(BucketFillerStacks[0].itemID);
+		int liquidId = BuildCraftAPI.getLiquidForFilledItem(BucketFillerStacks[0]);
         
         if (liquidId == 0 && BucketFillerStacks[0].itemID != Item.bucketEmpty.shiftedIndex && 
                 (mod_jBuildCraft_BucketFiller.ic2IsInstalled == true && (BucketFillerStacks[0].itemID != mod_jBuildCraft_BucketFiller.ic2CellEmpty.shiftedIndex)) ) {
@@ -199,7 +200,7 @@ public class TileBucketFiller extends TileMachine
             return;
         }
         
-        if (liquidId == 0 && slot.quantity < API.BUCKET_VOLUME) {
+        if (liquidId == 0 && slot.quantity < BuildCraftAPI.BUCKET_VOLUME) {
             if(retflag != 6 && debug == true) {
                 retflag = 6;
                 System.out.println("return 6");
@@ -227,13 +228,13 @@ public class TileBucketFiller extends TileMachine
         //int CookInc = energyToUse;
         int energyToUse = mod_jBuildCraft_BucketFiller.fillBucketEnergy;
 
-        int energyUsed = 0;
+        float energyUsed = 0;
         if(liquidId == 0){
             if(BucketFillerStacks[0].itemID == Item.bucketEmpty.shiftedIndex) {
                 //System.out.println("Bucket");
                 if (!hasPower) {
                     energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = API.getBucketForLiquid(slot.liquidId);
+                    NewBucket = BuildCraftAPI.getFilledItemForLiquid(slot.liquidId).itemID;
                     BucketQuantity = 1;
                 }
             } else if(mod_jBuildCraft_BucketFiller.ic2IsInstalled == true){
@@ -295,9 +296,9 @@ public class TileBucketFiller extends TileMachine
             }
             
             if(liquidId == 0) {
-                slot.quantity -= API.BUCKET_VOLUME;
+                slot.quantity -= BuildCraftAPI.BUCKET_VOLUME;
             } else {
-                fill(Orientations.Unknown, API.BUCKET_VOLUME, liquidId, true);
+                fill(Orientations.Unknown, BuildCraftAPI.BUCKET_VOLUME, liquidId, true);
             }
             
             NewBucket = 0;
@@ -358,7 +359,6 @@ public class TileBucketFiller extends TileMachine
         return slot.quantity;
     }
 
-    @Override
     public int getCapacity() {
         return LIQUID_PER_SLOT - 1;
     }
@@ -513,4 +513,14 @@ public class TileBucketFiller extends TileMachine
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 4, NewBucket);
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 5, BucketQuantity);
     }
+
+	@Override
+	public LiquidSlot[] getLiquidSlots() {
+		return new LiquidSlot[] {new LiquidSlot(slot.liquidId, slot.quantity, getCapacity())};
+	}
+
+	@Override
+	public boolean allowActions() {
+		return true;
+	}
 }
