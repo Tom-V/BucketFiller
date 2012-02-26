@@ -181,7 +181,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     
     @Override
     public String getVersion() {
-        return "2.2.12";
+        return "2.2.13";
     }
     
     public String getPriorities() {
