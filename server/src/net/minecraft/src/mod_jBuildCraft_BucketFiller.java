@@ -35,6 +35,8 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     public static int fillCellEnergy;
     public static int waterGeneratorEnergy;
     
+    public static int bucketFillerGuiId;
+    
     @Override
     public void ModsLoaded () {	
         super.ModsLoaded();
@@ -47,6 +49,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy",Configuration.GENERAL_PROPERTY, 25);
         Property fillCellEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillCellEnergy",Configuration.GENERAL_PROPERTY, 30);
         Property waterGeneratorEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("WaterGeneratorEnergy",Configuration.GENERAL_PROPERTY, 7);
+        Property BucketFillerGuiIdProperty = BucketFillerConfiguration.getOrCreateIntProperty("BucketFillerGuiId", Configuration.GENERAL_PROPERTY, 100);
         BucketFillerConfiguration.save();
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
@@ -67,6 +70,13 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         fillBucketEnergy = Integer.parseInt(fillBucketEnergyProperty.value);
         fillCellEnergy = Integer.parseInt(fillCellEnergyProperty.value);
         waterGeneratorEnergy = Integer.parseInt(waterGeneratorEnergyProperty.value);
+        
+        bucketFillerGuiId = Integer.parseInt(BucketFillerGuiIdProperty.value);
+        if(bucketFillerGuiId > 127)
+        {
+        	bucketFillerGuiId = 100;
+        }
+        
         
         if(fillCellEnergy > (fillBucketEnergy *4)) {
             fillCellEnergy = (fillBucketEnergy *4);

@@ -31,6 +31,8 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     public static int fillCellEnergy;
     public static int waterGeneratorEnergy;
     
+    public static int bucketFillerGuiId;
+    
     @Override
     public void ModsLoaded() {	
         super.ModsLoaded();
@@ -44,6 +46,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy",Configuration.GENERAL_PROPERTY, 25);
         Property fillCellEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillCellEnergy",Configuration.GENERAL_PROPERTY, 30);
         Property waterGeneratorEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("WaterGeneratorEnergy",Configuration.GENERAL_PROPERTY, 7);
+        Property BucketFillerGuiIdProperty = BucketFillerConfiguration.getOrCreateIntProperty("BucketFillerGuiId", Configuration.GENERAL_PROPERTY, 100);
         BucketFillerConfiguration.save();
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
@@ -68,6 +71,13 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         fillBucketEnergy = Integer.parseInt(fillBucketEnergyProperty.value);
         fillCellEnergy = Integer.parseInt(fillCellEnergyProperty.value);
         waterGeneratorEnergy = Integer.parseInt(waterGeneratorEnergyProperty.value);
+        
+        bucketFillerGuiId = Integer.parseInt(BucketFillerGuiIdProperty.value);
+        if(bucketFillerGuiId > 127)
+        {
+        	bucketFillerGuiId = 100;
+        }
+        
         
         if(fillCellEnergy > (fillBucketEnergy *4)) {
             fillCellEnergy = (fillBucketEnergy *4);
@@ -171,8 +181,16 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
             ic2IsInstalled = true;
             //System.out.println("IC2 Worked lol");
         }
-        catch(ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e){
+        catch(ClassNotFoundException e){
             ic2IsInstalled = false;
+        }catch(NoSuchFieldException e){
+        	ic2IsInstalled = false;
+        }catch(SecurityException e){
+        	ic2IsInstalled = false;
+        }catch(IllegalArgumentException e){
+        	ic2IsInstalled = false;
+        }catch(IllegalAccessException e){
+        	ic2IsInstalled = false;
         } 
         
        // if(!ic2IsInstalled)
@@ -189,12 +207,14 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     @Override
     public GuiScreen HandleGUI(int i) {
         TileBucketFiller tile = new TileBucketFiller();
-	switch (i) {
-            case 100:
-                return new GuiBucketFiller(ModLoader.getMinecraftInstance().thePlayer.inventory, tile);
-            default:
-                return null;
-        }
+		if(i == bucketFillerGuiId)
+		{
+		    return new GuiBucketFiller(ModLoader.getMinecraftInstance().thePlayer.inventory, tile);
+		}
+		else
+		{
+			return null;
+		}        
     }
 
     @Override
