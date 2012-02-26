@@ -32,6 +32,8 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     public static int fillCellEnergy;
     public static int waterGeneratorEnergy;
     
+    public static int bucketFillerGuiId;
+    
     @Override
     public void ModsLoaded() {	
         super.ModsLoaded();
@@ -48,6 +50,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy",Configuration.GENERAL_PROPERTY, 25);
         Property fillCellEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillCellEnergy",Configuration.GENERAL_PROPERTY, 30);
         Property waterGeneratorEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("WaterGeneratorEnergy",Configuration.GENERAL_PROPERTY, 7);
+        Property BucketFillerGuiIdProperty = BucketFillerConfiguration.getOrCreateIntProperty("bucketfiller",Configuration.GENERAL_PROPERTY, 100);
         BucketFillerConfiguration.save();
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
@@ -98,7 +101,14 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
             waterGeneratorEnergy = 1;
         }
         
-        ModLoaderMp.RegisterGUI(this,100);
+        
+        bucketFillerGuiId = Integer.parseInt(BucketFillerGuiIdProperty.value);
+    	if(bucketFillerGuiId > 127)
+    	{
+    		bucketFillerGuiId = 100;
+        }
+    	
+    	ModLoaderMp.RegisterGUI(this,bucketFillerGuiId);
         
         CraftingManager craftingmanager = CraftingManager.getInstance();
         craftingmanager.addRecipe(
@@ -196,17 +206,19 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     
     @Override
     public String getVersion() {
-        return "2.2.12";
+        return "3.1.3";
     }
     
     @Override
     public GuiScreen HandleGUI(int i) {
         TileBucketFiller tile = new TileBucketFiller();
-	switch (i) {
-            case 100:
-                return new GuiBucketFiller(ModLoader.getMinecraftInstance().thePlayer.inventory, tile);
-            default:
-                return null;
+        if(i == bucketFillerGuiId)
+        {
+            return new GuiBucketFiller(ModLoader.getMinecraftInstance().thePlayer.inventory, tile);        	
+        }
+        else
+        {
+        	return null;
         }
     }
 

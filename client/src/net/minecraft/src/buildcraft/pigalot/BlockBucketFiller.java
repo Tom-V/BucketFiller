@@ -100,7 +100,7 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
 	@Override
 	public void addCreativeItems(ArrayList itemList) {
 		for (int i = 0; i < 3; i++) {
-			ItemStack bucketFiller = new ItemStack(new BlockBucketFiller(blockID));
+			ItemStack bucketFiller = new ItemStack(this);
 			bucketFiller.setItemDamage(i);
 			itemList.add(bucketFiller);
 		}		
