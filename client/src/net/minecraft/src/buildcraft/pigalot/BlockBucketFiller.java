@@ -1,5 +1,7 @@
 package net.minecraft.src.buildcraft.pigalot;
 
+import java.util.ArrayList;
+
 import net.minecraft.src.*;
 import net.minecraft.src.buildcraft.core.Utils;
 import net.minecraft.src.forge.ITextureProvider;
@@ -95,5 +97,13 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
     protected int damageDropped(int i) {
         return i;
     }
-    
+
+    @Override
+	public void addCreativeItems(ArrayList itemList) {
+		for (int i = 0; i < 3; i++) {
+			ItemStack bucketFiller = new ItemStack(this);
+			bucketFiller.setItemDamage(i);
+			itemList.add(bucketFiller);
+		}		
+	}
 }
