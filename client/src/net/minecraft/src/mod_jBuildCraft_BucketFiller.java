@@ -71,14 +71,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         fillBucketEnergy = Integer.parseInt(fillBucketEnergyProperty.value);
         fillCellEnergy = Integer.parseInt(fillCellEnergyProperty.value);
         waterGeneratorEnergy = Integer.parseInt(waterGeneratorEnergyProperty.value);
-        
-        bucketFillerGuiId = Integer.parseInt(BucketFillerGuiIdProperty.value);
-        if(bucketFillerGuiId > 127)
-        {
-        	bucketFillerGuiId = 100;
-        }
-        
-        
+                
         if(fillCellEnergy > (fillBucketEnergy *4)) {
             fillCellEnergy = (fillBucketEnergy *4);
         }
@@ -103,7 +96,12 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
             waterGeneratorEnergy = 1;
         }
         
-        ModLoaderMp.RegisterGUI(this,100);
+		bucketFillerGuiId = Integer.parseInt(BucketFillerGuiIdProperty.value);
+        if(bucketFillerGuiId > 127)
+        {
+        	bucketFillerGuiId = 100;
+        }
+        ModLoaderMp.RegisterGUI(this,bucketFillerGuiId);
         
         CraftingManager craftingmanager = CraftingManager.getInstance();
         craftingmanager.addRecipe(
