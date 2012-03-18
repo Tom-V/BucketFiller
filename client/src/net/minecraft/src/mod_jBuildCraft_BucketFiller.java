@@ -34,8 +34,8 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     public static int bucketFillerGuiId;
     
     @Override
-    public void ModsLoaded() {	
-        super.ModsLoaded();
+    public void modsLoaded() {	
+        super.modsLoaded();
         BuildCraftCore.initialize();
         
         BucketFillerConfiguration = new Configuration(new File(CoreProxy.getBuildCraftBase(), "config/bucketfiller.cfg"));
@@ -50,20 +50,20 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         BucketFillerConfiguration.save();
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
-        ModLoader.RegisterBlock(blockBucketFiller);
+        ModLoader.registerBlock(blockBucketFiller);
         
-        ModLoader.RegisterTileEntity(TileBucketFiller.class,
+        ModLoader.registerTileEntity(TileBucketFiller.class,
 				"net.minecraft.src.buildcraft.pigalot.TileBucketFiller");
         
-        ModLoader.RegisterTileEntity(TileSelfPoweredFiller.class,
+        ModLoader.registerTileEntity(TileSelfPoweredFiller.class,
 				"net.minecraft.src.buildcraft.pigalot.TileSelfPoweredFiller");
         
-        ModLoader.RegisterTileEntity(TileWaterGenerator.class,
+        ModLoader.registerTileEntity(TileWaterGenerator.class,
 				"net.minecraft.src.buildcraft.pigalot.TileWaterGenerator");
         
-        ModLoader.AddLocalization("tile.BucketFiller.BucketFiller.name", "Bucket Filler");
-        ModLoader.AddLocalization("tile.BucketFiller.SelfPoweredBucketFiller.name", "Self Powered Bucket Filler");
-        ModLoader.AddLocalization("tile.BucketFiller.WaterGenerator.name", "Water Generator");
+        ModLoader.addLocalization("tile.BucketFiller.BucketFiller.name", "Bucket Filler");
+        ModLoader.addLocalization("tile.BucketFiller.SelfPoweredBucketFiller.name", "Self Powered Bucket Filler");
+        ModLoader.addLocalization("tile.BucketFiller.WaterGenerator.name", "Water Generator");
         
         Item.itemsList[Integer.parseInt(BucketFillerId.value)] = new ItemBucketFiller(Integer.parseInt(BucketFillerId.value)-256, blockBucketFiller).setItemName("BucketFiller");
         
@@ -101,7 +101,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         {
         	bucketFillerGuiId = 100;
         }
-        ModLoaderMp.RegisterGUI(this,bucketFillerGuiId);
+        ModLoaderMp.registerGUI(this,bucketFillerGuiId);
         
         CraftingManager craftingmanager = CraftingManager.getInstance();
         craftingmanager.addRecipe(
@@ -203,7 +203,7 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     }
     
     @Override
-    public GuiScreen HandleGUI(int i) {
+    public GuiScreen handleGUI(int i) {
         TileBucketFiller tile = new TileBucketFiller();
 		if(i == bucketFillerGuiId)
 		{

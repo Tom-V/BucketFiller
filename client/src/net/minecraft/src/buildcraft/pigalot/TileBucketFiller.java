@@ -474,7 +474,7 @@ public class TileBucketFiller extends TileMachine
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)i);
                 BucketFillerStacks[i].writeToNBT(nbttagcompound1);
-                nbttaglist.setTag(nbttagcompound1);
+                nbttaglist.appendTag(nbttagcompound1);
             }
         }
 
@@ -513,4 +513,9 @@ public class TileBucketFiller extends TileMachine
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 4, NewBucket);
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 5, BucketQuantity);
     }
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slotId) {
+		return null;
+	}
 }
