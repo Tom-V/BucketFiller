@@ -34,6 +34,8 @@ public class TileBucketFiller extends TileMachine
         @TileNetworkData public int quantity = 0;
 
         public int fill(Orientations from, int amount, int id, boolean doFill) {
+        	if(id == 0) return 0;
+        	
             if (quantity != 0 && liquidId != id) {
                 return 0;
             } else if (quantity + amount <= LIQUID_PER_SLOT) {
