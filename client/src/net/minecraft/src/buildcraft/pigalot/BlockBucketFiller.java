@@ -3,6 +3,7 @@ package net.minecraft.src.buildcraft.pigalot;
 import java.util.ArrayList;
 import net.minecraft.src.*;
 import net.minecraft.src.buildcraft.core.Utils;
+import net.minecraft.src.buildcraft.transport.ItemPipe;
 import net.minecraft.src.forge.ITextureProvider;
 
 /**
@@ -35,6 +36,15 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
     @Override
     public boolean blockActivated(World world, int i, int j, int k,
 			EntityPlayer entityplayer){
+    	
+    	// Drop through if the player is sneaking 
+    	if(entityplayer.isSneaking()) return false;
+
+    	// Do not open Gui's when having a pipe in hand 
+    	if (entityplayer.getCurrentEquippedItem() != null) 
+    		if( entityplayer.getCurrentEquippedItem().getItem() instanceof ItemPipe)
+    			return false;   
+    	
         switch(world.getBlockMetadata(i,j,k)) {
             case 0:
                 TileBucketFiller tile = (TileBucketFiller) world.getBlockTileEntity(i, j, k);
