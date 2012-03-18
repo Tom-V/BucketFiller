@@ -17,7 +17,7 @@ public class PigalotProxie {
     public static void displayGUIBucketFiller(EntityPlayer entityplayer,
 			TileBucketFiller tile) {
 		if (!APIProxy.isClient(APIProxy.getWorld())) {
-			ModLoader.OpenGUI(entityplayer, 100,
+			ModLoader.openGUI(entityplayer, 100,
 				tile, new ContainerBucketFiller(entityplayer.inventory, tile));
 		}
 	}
