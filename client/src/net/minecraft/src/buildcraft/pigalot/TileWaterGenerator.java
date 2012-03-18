@@ -17,7 +17,7 @@ public class TileWaterGenerator  extends TileMachine
     
     protected PowerProvider powerProvider;
     
-    public static int MAX_LIQUID = BuildCraftAPI.BUCKET_VOLUME * 5;
+    public static int MAX_LIQUID = API.BUCKET_VOLUME * 5;
     public static int MAX_ENERGY = mod_jBuildCraft_BucketFiller.waterGeneratorEnergy * 5;
     
     SafeTimeTracker updateNetworkTime = new SafeTimeTracker();
@@ -79,7 +79,7 @@ public class TileWaterGenerator  extends TileMachine
         float energyUsed = powerProvider.useEnergy(mod_jBuildCraft_BucketFiller.waterGeneratorEnergy, mod_jBuildCraft_BucketFiller.waterGeneratorEnergy *5, true);
         if(liquidquantity < MAX_LIQUID){
             if(energyUsed >= mod_jBuildCraft_BucketFiller.waterGeneratorEnergy) {
-                liquidquantity += BuildCraftAPI.BUCKET_VOLUME * (int)(energyUsed / mod_jBuildCraft_BucketFiller.waterGeneratorEnergy);
+                liquidquantity += API.BUCKET_VOLUME * (int)(energyUsed / mod_jBuildCraft_BucketFiller.waterGeneratorEnergy);
                 if(liquidquantity > MAX_LIQUID) {
                    liquidquantity = MAX_LIQUID;
                 }
@@ -109,9 +109,4 @@ public class TileWaterGenerator  extends TileMachine
     @Override
     public void doWork() {
     }
-
-	@Override
-	public boolean allowActions() {
-		return true;
-	}
 }

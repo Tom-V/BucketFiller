@@ -19,7 +19,7 @@ public class TileBucketFiller extends TileMachine
     SafeTimeTracker updateNetworkTime = new SafeTimeTracker();
     private ItemStack[] BucketFillerStacks;
     private boolean _isActive;
-    public static int LIQUID_PER_SLOT = BuildCraftAPI.BUCKET_VOLUME * 10;
+    public static int LIQUID_PER_SLOT = API.BUCKET_VOLUME * 10;
     @TileNetworkData public int CookTime;
     public int RequiredCookTime;
     boolean hasPower;
@@ -179,7 +179,7 @@ public class TileBucketFiller extends TileMachine
             return;
         }
         
-		int liquidId = BuildCraftAPI.getLiquidForFilledItem(BucketFillerStacks[0]);
+		int liquidId = API.getLiquidForBucket(BucketFillerStacks[0].itemID);
         
         if (liquidId == 0 && BucketFillerStacks[0].itemID != Item.bucketEmpty.shiftedIndex && 
                 (mod_jBuildCraft_BucketFiller.ic2IsInstalled == true && (BucketFillerStacks[0].itemID != mod_jBuildCraft_BucketFiller.ic2CellEmpty.shiftedIndex)) ) {
@@ -200,7 +200,7 @@ public class TileBucketFiller extends TileMachine
             return;
         }
         
-        if (liquidId == 0 && slot.quantity < BuildCraftAPI.BUCKET_VOLUME) {
+        if (liquidId == 0 && slot.quantity < API.BUCKET_VOLUME) {
             if(retflag != 6 && debug == true) {
                 retflag = 6;
                 System.out.println("return 6");
@@ -234,7 +234,7 @@ public class TileBucketFiller extends TileMachine
                 //System.out.println("Bucket");
                 if (!hasPower) {
                     energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = BuildCraftAPI.getFilledItemForLiquid(slot.liquidId).itemID;
+                    NewBucket = API.getBucketForLiquid(slot.liquidId);
                     BucketQuantity = 1;
                 }
             } else if(mod_jBuildCraft_BucketFiller.ic2IsInstalled == true){
@@ -296,9 +296,9 @@ public class TileBucketFiller extends TileMachine
             }
             
             if(liquidId == 0) {
-                slot.quantity -= BuildCraftAPI.BUCKET_VOLUME;
+                slot.quantity -= API.BUCKET_VOLUME;
             } else {
-                fill(Orientations.Unknown, BuildCraftAPI.BUCKET_VOLUME, liquidId, true);
+                fill(Orientations.Unknown, API.BUCKET_VOLUME, liquidId, true);
             }
             
             NewBucket = 0;
@@ -474,7 +474,7 @@ public class TileBucketFiller extends TileMachine
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)i);
                 BucketFillerStacks[i].writeToNBT(nbttagcompound1);
-                nbttaglist.setTag(nbttagcompound1);
+                nbttaglist.appendTag(nbttagcompound1);
             }
         }
 
@@ -515,12 +515,7 @@ public class TileBucketFiller extends TileMachine
     }
 
 	@Override
-	public LiquidSlot[] getLiquidSlots() {
-		return new LiquidSlot[] {new LiquidSlot(slot.liquidId, slot.quantity, getCapacity())};
-	}
-
-	@Override
-	public boolean allowActions() {
-		return true;
+	public ItemStack getStackInSlotOnClosing(int var1) {
+		return null;
 	}
 }
