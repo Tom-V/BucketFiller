@@ -63,7 +63,7 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
 
     @Override
     public String getTextureFile() {
-        return "/net/minecraft/src/buildcraft/pigalot/gui/block_textures.png";
+        return mod_jBuildCraft_BucketFiller.customBlockTexture;
     }
     
     @Override

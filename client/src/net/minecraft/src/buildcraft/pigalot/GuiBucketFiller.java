@@ -49,12 +49,18 @@ public class GuiBucketFiller extends GuiContainer{
         Object o = null;
         int liquidImgIndex = 0;
 
+        // not sure if block because of recent update ... (4096 BlockIds)
         if (liquidId < Block.blocksList.length) {
-            o = Block.blocksList[liquidId];
-            liquidImgIndex = Block.blocksList[liquidId].blockIndexInTexture;
-        } else {
+        	o = Block.blocksList[liquidId];
+        } 
+        
+        if( o == null){
             o = Item.itemsList[liquidId];
             liquidImgIndex = Item.itemsList[liquidId].getIconFromDamage(0);
+        }
+        else
+        {
+        	liquidImgIndex = Block.blocksList[liquidId].blockIndexInTexture;
         }
 
         if (o instanceof ITextureProvider) {

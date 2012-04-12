@@ -12,7 +12,7 @@ public class PigalotProxie {
     
     public static void displayGUIBucketFiller(EntityPlayer entityplayer,
 			TileBucketFiller tile) {
-		if (!APIProxy.isClient(APIProxy.getWorld())) {
+    	if (!APIProxy.isClient(ModLoader.getMinecraftInstance().theWorld)) {
 			ModLoader.getMinecraftInstance().displayGuiScreen(
 					new GuiBucketFiller(entityplayer.inventory, tile));
 		}

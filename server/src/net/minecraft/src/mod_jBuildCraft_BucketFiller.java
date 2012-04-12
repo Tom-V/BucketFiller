@@ -7,8 +7,10 @@ import net.minecraft.src.buildcraft.pigalot.ItemBucketFiller;
 import net.minecraft.src.buildcraft.pigalot.TileBucketFiller;
 import net.minecraft.src.buildcraft.pigalot.TileSelfPoweredFiller;
 import net.minecraft.src.buildcraft.pigalot.TileWaterGenerator;
+import net.minecraft.src.forestry.api.ItemInterface;
 import net.minecraft.src.forge.Configuration;
 import net.minecraft.src.forge.Property;
+import net.minecraft.src.ic2.api.Items;
 
 /**
  *
@@ -24,15 +26,14 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
     public static Item ic2CellEmpty;
     public static Item ic2CellLava;
     public static Item ic2CellWater;
-    public static Item ic2CellCoal;
-    public static Item ic2CellCoalRef;
-    public static Item ic2PartIndustrialDiamond;
-    
+	public static boolean forestryInstalled = false;
+        
     public static Configuration BucketFillerConfiguration;
     
     public static int emptyBucketEnergy;
     public static int fillBucketEnergy;
     public static int fillCellEnergy;
+	public static int fillForestryEnergy;
     public static int waterGeneratorEnergy;
     
     public static int bucketFillerGuiId;
@@ -43,18 +44,18 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         BuildCraftCore.initialize();
         BucketFillerConfiguration = new Configuration(new File(CoreProxy.getBuildCraftBase(), "config/bucketfiller.cfg"));
         BucketFillerConfiguration.load();
-        Property BucketFillerId = BucketFillerConfiguration.getOrCreateIntProperty("BucketFiller.id",Configuration.BLOCK_PROPERTY, 170);
-        Property ic2Diamonds = BucketFillerConfiguration.getOrCreateBooleanProperty("UseIC2Diamonds", Configuration.GENERAL_PROPERTY, false);
+        Property BucketFillerId = BucketFillerConfiguration.getOrCreateIntProperty("BucketFiller.id",Configuration.BLOCK_PROPERTY, 175);
         Property emptyBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("EmptyBucketEnergy",Configuration.GENERAL_PROPERTY, 20);
         Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy",Configuration.GENERAL_PROPERTY, 25);
         Property fillCellEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillCellEnergy",Configuration.GENERAL_PROPERTY, 30);
+		Property fillForestryEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillForestryEnergy", Configuration.GENERAL_PROPERTY, 30);
         Property waterGeneratorEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("WaterGeneratorEnergy",Configuration.GENERAL_PROPERTY, 7);
         Property BucketFillerGuiIdProperty = BucketFillerConfiguration.getOrCreateIntProperty("BucketFillerGuiId", Configuration.GENERAL_PROPERTY, 100);
         BucketFillerConfiguration.save();
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
         ModLoader.registerBlock(blockBucketFiller);
-        
+                       
         ModLoader.registerTileEntity(TileBucketFiller.class,
 				"net.minecraft.src.buildcraft.pigalot.TileBucketFiller");
         
@@ -69,12 +70,13 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         emptyBucketEnergy = Integer.parseInt(emptyBucketEnergyProperty.value);
         fillBucketEnergy = Integer.parseInt(fillBucketEnergyProperty.value);
         fillCellEnergy = Integer.parseInt(fillCellEnergyProperty.value);
+		fillForestryEnergy = Integer.parseInt(fillForestryEnergyProperty.value);
         waterGeneratorEnergy = Integer.parseInt(waterGeneratorEnergyProperty.value);
         
         bucketFillerGuiId = Integer.parseInt(BucketFillerGuiIdProperty.value);
         if(bucketFillerGuiId > 127)
         {
-        	bucketFillerGuiId = 100;
+        	bucketFillerGuiId = 103;
         }
         
         
@@ -143,7 +145,6 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
                 Character.valueOf('E'),	new ItemStack(BuildCraftEnergy.engineBlock, 1, 0),
                 Character.valueOf('F'),	blockBucketFiller});
         }
-        
         /*craftingmanager.addRecipe(
             new ItemStack(blockBucketFiller , 1, 0),
             new Object[] { "PP ", 
@@ -153,32 +154,44 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
             new Object[] { "P  ","P  ", 
                 Character.valueOf('P'),	Block.dirt,});*/
         
+        //Pipes
+        
         //IC2
         try{
-            ic2CellEmpty = (Item) Class.forName("mod_IC2").getField("itemCellEmpty").get(null);
-            ic2CellLava = (Item) Class.forName("mod_IC2").getField("itemCellLava").get(null);
-            ic2CellWater = (Item) Class.forName("mod_IC2").getField("itemCellWater").get(null);
-            ic2CellCoalRef = (Item) Class.forName("mod_IC2").getField("itemCellCoal").get(null);
-            ic2CellCoal = (Item) Class.forName("mod_IC2").getField("itemCellCoalRef").get(null);
-            ic2PartIndustrialDiamond = (Item) Class.forName("mod_IC2").getField("itemPartIndustrialDiamond").get(null);
-            if(Boolean.parseBoolean(ic2Diamonds.value)) {
-                craftingmanager.addRecipe(
-                        new ItemStack(BuildCraftCore.diamondGearItem), 
-                        new Object[] {" I ", "IGI", " I ", Character.valueOf('I'), ic2PartIndustrialDiamond,Character.valueOf('G'), BuildCraftCore.goldGearItem });
-            }
-            ic2IsInstalled = true;
-            //System.out.println("IC2 Worked lol");
+			ic2CellEmpty = getIC2Item("cell");
+			ic2CellLava = getIC2Item("lavaCell");
+			ic2CellWater = getIC2Item("waterCell");
+
+			ic2IsInstalled = true;
+            ModLoader.getLogger().fine("IC2 loaded in BucketFiller");
+            
         }
         catch(Exception e){
             ic2IsInstalled = false;
+            ModLoader.getLogger().throwing("mod_jBuildCraft_BucketFiller", "modsLoaded",e);
         } 
-        
-       // if(!ic2IsInstalled)
-            //System.out.println("I haz sad");
-        
+                
+		// Forestry
+		ItemStack wrench = ItemInterface.getItem("wrench");//wrench will hopefully never change
+		if (wrench == null) {
+			ModLoader.getLogger().fine("[BucketFiller] Disabled Forestry-integration");
+			forestryInstalled = false;
+		} else {
+			ModLoader.getLogger().fine("[BucketFiller] Enabled Forestry-integration");
+			forestryInstalled = true;
+
+		}
         instance = this;
     }
     
+	private Item getIC2Item(String itemName) throws Exception {
+		ItemStack stack = Items.getItem(itemName);
+		if (stack == null) {
+			throw new Exception("[BucketFiller] Couldn't find IC2-item: " + itemName);
+		}
+		return stack.getItem();
+	}
+
     @Override
     public String getVersion() {
         return "2.2.13";

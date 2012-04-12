@@ -7,6 +7,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICrafting;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemBucket;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
@@ -21,6 +22,8 @@ import net.minecraft.src.buildcraft.api.SafeTimeTracker;
 import net.minecraft.src.buildcraft.api.TileNetworkData;
 import net.minecraft.src.buildcraft.core.IMachine;
 import net.minecraft.src.buildcraft.factory.TileMachine;
+import net.minecraft.src.forestry.api.liquids.LiquidContainer;
+import net.minecraft.src.forestry.api.liquids.LiquidManager;
 import net.minecraft.src.forge.ISidedInventory;
 import net.minecraft.src.mod_jBuildCraft_BucketFiller;
 
@@ -35,10 +38,7 @@ public class TileBucketFiller extends TileMachine
     @TileNetworkData public int CookTime;
     public int RequiredCookTime;
     boolean hasPower;
-    int NewBucket = 0;
-    int BucketQuantity = 0;
-    int retflag;
-    boolean debug = false;
+	ItemStack newBucketStack;
     
     public static int MAX_ENERGY = mod_jBuildCraft_BucketFiller.fillBucketEnergy * 4;
 
@@ -149,176 +149,158 @@ public class TileBucketFiller extends TileMachine
             }
         }
         _isActive = false;
-        Boolean flag = false;
-        if(mod_jBuildCraft_BucketFiller.ic2IsInstalled && BucketFillerStacks[1] != null){
-            Integer[] testcase = {mod_jBuildCraft_BucketFiller.ic2CellLava.shiftedIndex,mod_jBuildCraft_BucketFiller.ic2CellWater.shiftedIndex,mod_jBuildCraft_BucketFiller.ic2CellCoal.shiftedIndex,mod_jBuildCraft_BucketFiller.ic2CellCoalRef.shiftedIndex};
-            if(BucketFillerStacks[1] != null){
-                flag = Arrays.asList(testcase).contains(BucketFillerStacks[1].itemID);
-            } else {
-                flag = false;
-            }
-        }else {
-            flag = false;
-        }
-        
-        if ((BucketFillerStacks[1] != null && !flag)) {
-            if(retflag != 1 && debug == true) {
-                retflag = 1;
-                System.out.println("return 1");
-                System.out.println("flag = ");
-                System.out.print(flag);
-                System.out.println("");
-                System.out.println(" Stacks[1] = ");
-                System.out.print(BucketFillerStacks[1] != null);
-                System.out.println("");
-            }
-            CookTime = 0;
-            return;
-        }
-        if(BucketFillerStacks[0] == null){
-            if(retflag != 2 && debug == true) {
-                retflag = 2;
-                System.out.println("return 2");
-            }
-            CookTime = 0;
-            return;
-        }
-        
-        if(flag && !(BucketFillerStacks[1].stackSize < BucketFillerStacks[1].getMaxStackSize())) {
-           if(retflag != 3 && debug == true) {
-                retflag = 3;
-                System.out.println("return 3");
-            }
-            CookTime = 0;
-            return;
-        }
-        
-        int liquidId = API.getLiquidForBucket(BucketFillerStacks[0].itemID);
-        
-        if (liquidId == 0 && BucketFillerStacks[0].itemID != Item.bucketEmpty.shiftedIndex && 
-                (mod_jBuildCraft_BucketFiller.ic2IsInstalled == true && (BucketFillerStacks[0].itemID != mod_jBuildCraft_BucketFiller.ic2CellEmpty.shiftedIndex)) ) {
-            if(retflag != 4 && debug == true) {
-                retflag = 4;
-                System.out.println("return 4");
-            }
-            CookTime = 0;
-            return;
-        }
-        
-        if (liquidId != 0 && (getFreeCapacity() == 0 || (slot.liquidId != liquidId && (slot.liquidId != 0 && slot.quantity !=0)))) {
-            if(retflag != 5 && debug == true) {
-                retflag = 5;
-                System.out.println("return 5");
-            }
-            CookTime = 0;
-            return;
-        }
-        
-        if (liquidId == 0 && slot.quantity < API.BUCKET_VOLUME) {
-            if(retflag != 6 && debug == true) {
-                retflag = 6;
-                System.out.println("return 6");
-            }
-            CookTime = 0;
-            return;
-        }
-        
-        RequiredCookTime = 100;
-        
-        if(liquidId == 0){
-            if(BucketFillerStacks[0].itemID == Item.bucketEmpty.shiftedIndex) {
-                RequiredCookTime = 200;
-            } else if(mod_jBuildCraft_BucketFiller.ic2IsInstalled == true){
-                RequiredCookTime = 300;
-            }
-        }
-        
-        if(CookTime > RequiredCookTime)
-            CookTime = 0;
-        
-        _isActive = true;
-        
-        //int energyToUse = 2+ powerProvider.energyStored/1000;
-        //int CookInc = energyToUse;
-        int energyToUse = mod_jBuildCraft_BucketFiller.fillBucketEnergy;
+
+		// no input: Do nothing
+		if (getInputStack() == null) {
+			CookTime = 0;
+			return;
+		}
+
+		// outputstack == full
+		if (getOutputStack() != null && getOutputStack().stackSize >= getOutputStack().getMaxStackSize()) {
+			CookTime = 0;
+			return;
+		}
+
+		int inputLiquidId = API.getLiquidForBucket(getInputStack().itemID);
+		// input empty and input <> empty item
+		boolean isValidEmptyItem = false;
+		if (getInputStack().itemID == Item.bucketEmpty.shiftedIndex) {
+			isValidEmptyItem = true;
+		} else if (mod_jBuildCraft_BucketFiller.ic2IsInstalled && getInputStack().itemID == mod_jBuildCraft_BucketFiller.ic2CellEmpty.shiftedIndex) {
+			isValidEmptyItem = true;
+		} else if (mod_jBuildCraft_BucketFiller.forestryInstalled && (LiquidManager.isEmptyContainer(getInputStack()))) {
+			isValidEmptyItem = true;
+		}
+
+		if (inputLiquidId == 0 && !isValidEmptyItem) {
+			// input is empty and no valid empty item
+			CookTime = 0;
+			return;
+		}
+
+		// BucketFiller is full or liquid is different
+		if (inputLiquidId != 0 && (getFreeCapacity() == 0 || (slot.liquidId != inputLiquidId && (slot.liquidId != 0 && slot.quantity != 0)))) {
+			CookTime = 0;
+			return;
+		}
+
+		// input is empty and bucketfiller is "empty"
+		if (inputLiquidId == 0 && slot.quantity < API.BUCKET_VOLUME) {
+			CookTime = 0;
+			return;
+		}
+
+		RequiredCookTime = 100;
+		if (inputLiquidId == 0) {
+			if (getInputStack().itemID == Item.bucketEmpty.shiftedIndex) {
+				RequiredCookTime = 200;
+			} else if (mod_jBuildCraft_BucketFiller.ic2IsInstalled || mod_jBuildCraft_BucketFiller.forestryInstalled) {
+				RequiredCookTime = 300;
+			}
+		}
+
+		if (CookTime > RequiredCookTime)
+			CookTime = 0;
+
+		_isActive = true;
+
+		int energyToUse = mod_jBuildCraft_BucketFiller.fillBucketEnergy;
 
         int energyUsed = 0;
-        if(liquidId == 0){
-            if(BucketFillerStacks[0].itemID == Item.bucketEmpty.shiftedIndex) {
-                //System.out.println("Bucket");
-                if (!hasPower) {
-                    energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = API.getBucketForLiquid(slot.liquidId);
-                    BucketQuantity = 1;
-                }
-            } else if(mod_jBuildCraft_BucketFiller.ic2IsInstalled == true){
-                //System.out.println("IC2");
-                energyToUse = mod_jBuildCraft_BucketFiller.fillCellEnergy;
-                if (slot.liquidId == Block.lavaStill.blockID && !hasPower) {
-                    energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = mod_jBuildCraft_BucketFiller.ic2CellLava.shiftedIndex;
-                    BucketQuantity = 1;
-                } else if (slot.liquidId == Block.waterStill.blockID && !hasPower) {
-                    energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = mod_jBuildCraft_BucketFiller.ic2CellWater.shiftedIndex;
-                    BucketQuantity = 1;
-                } else if (slot.liquidId == BuildCraftEnergy.oilStill.blockID && !hasPower) {
-                    energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = mod_jBuildCraft_BucketFiller.ic2CellCoalRef.shiftedIndex;
-                    if(BucketQuantity <1) {
-                        BucketQuantity = 30;
-                    }
-                } else if (slot.liquidId == BuildCraftEnergy.fuel.shiftedIndex && !hasPower) {
-                    energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-                    NewBucket = mod_jBuildCraft_BucketFiller.ic2CellCoal.shiftedIndex;
-                    if(BucketQuantity <1) {
-                        BucketQuantity = 36;
-                    }
-                }
-            }
-        } else {
-            energyToUse = mod_jBuildCraft_BucketFiller.emptyBucketEnergy;
-            //System.out.println("reverse");
-            energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
-            NewBucket = Item.bucketEmpty.shiftedIndex;
-            BucketQuantity = 1;
-        }
-        
-        //CookTime += CookInc;
-        if (energyUsed >= energyToUse  && !hasPower)
-            hasPower = true;
+		if (inputLiquidId == 0) {
+			if (getInputStack().itemID == Item.bucketEmpty.shiftedIndex) {
+				if (!hasPower) {
+					energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
+					newBucketStack = new ItemStack(API.getBucketForLiquid(slot.liquidId), 1, 0);
+					newBucketStack.stackSize = 1;
+				}
+			} else {
+				if (mod_jBuildCraft_BucketFiller.ic2IsInstalled && getInputStack().itemID == mod_jBuildCraft_BucketFiller.ic2CellEmpty.shiftedIndex) {
+					energyToUse = mod_jBuildCraft_BucketFiller.fillCellEnergy;
+					if (slot.liquidId == Block.lavaStill.blockID && !hasPower) {
+						energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
+						newBucketStack = new ItemStack(mod_jBuildCraft_BucketFiller.ic2CellLava.shiftedIndex, 1, 0);
+					} else if (slot.liquidId == Block.waterStill.blockID && !hasPower) {
+						energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
+						newBucketStack = new ItemStack(mod_jBuildCraft_BucketFiller.ic2CellWater.shiftedIndex, 1, 0);
+					}
+				} else if (mod_jBuildCraft_BucketFiller.forestryInstalled) {
+					if (LiquidManager.isEmptyContainer(getInputStack())) {
 
-        if (hasPower && NewBucket != 0 && BucketQuantity >= 1) {
-            CookTime += 10;
-        
-            if(CookTime != RequiredCookTime) {
-                return;
-            }
-            
-            decrStackSize(0, 1);
-            createBucket(new ItemStack(NewBucket,1,0));
-            
-            onInventoryChanged();
-            
-            CookTime = 0;
-            hasPower = false;
-            
-            BucketQuantity--;
-            
-            if(BucketQuantity > 0){
-                return;
-            }
-            
-            if(liquidId == 0) {
-                slot.quantity -= API.BUCKET_VOLUME;
-            } else {
-                fill(Orientations.Unknown, API.BUCKET_VOLUME, liquidId, true);
-            }
-            
-            NewBucket = 0;
-        }
-    }
-    
+						for (LiquidContainer c : LiquidManager.liquidContainers) {
+							if (c.liquid.itemID == slot.liquidId && c.empty.isItemEqual(getInputStack())) {
+								energyToUse = mod_jBuildCraft_BucketFiller.fillForestryEnergy;
+								energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
+
+								newBucketStack = c.filled;
+								newBucketStack.stackSize = 1;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if (getOutputStack() != null && newBucketStack != null && getOutputStack().itemID != newBucketStack.itemID) {
+				CookTime = 0;
+				return;
+			}
+		} else {
+			// Emptying bucket
+			energyToUse = mod_jBuildCraft_BucketFiller.emptyBucketEnergy;
+			energyUsed = powerProvider.useEnergy(energyToUse, energyToUse, true);
+
+			if (getInputStack().getItem().getContainerItem() instanceof ItemBucket) {
+				newBucketStack = new ItemStack(Item.bucketEmpty);
+			} else if (mod_jBuildCraft_BucketFiller.ic2IsInstalled
+					&& (mod_jBuildCraft_BucketFiller.ic2CellLava.shiftedIndex == getInputStack().itemID || mod_jBuildCraft_BucketFiller.ic2CellWater.shiftedIndex == getInputStack().itemID)) {
+				newBucketStack = new ItemStack(mod_jBuildCraft_BucketFiller.ic2CellEmpty);
+			} else if (mod_jBuildCraft_BucketFiller.forestryInstalled) {
+				LiquidContainer container = LiquidManager.getLiquidContainer(getInputStack());
+				if (container != null) {
+					newBucketStack = container.empty;
+					newBucketStack.stackSize = 1;
+				}
+			}
+
+		}
+
+		if (energyUsed >= energyToUse && !hasPower)
+			hasPower = true;
+
+		if (hasPower && newBucketStack != null) {
+			CookTime += 10;
+
+			if (CookTime != RequiredCookTime) {
+				return;
+			}
+
+			decrStackSize(0, 1);
+			createBucket(newBucketStack);
+
+			onInventoryChanged();
+
+			CookTime = 0;
+			hasPower = false;
+
+			if (inputLiquidId == 0) {
+				slot.quantity -= API.BUCKET_VOLUME;
+			} else {
+				fill(Orientations.Unknown, API.BUCKET_VOLUME, inputLiquidId, true);
+			}
+
+			newBucketStack = null;
+		}
+	}
+
+	private ItemStack getInputStack() {
+		return BucketFillerStacks[0];
+	}
+
+	private ItemStack getOutputStack() {
+		return BucketFillerStacks[1];
+	}
     public void createBucket(ItemStack toAdd) {
         if(BucketFillerStacks[1] == null) {
             setInventorySlotContents(1, toAdd.copy());
@@ -465,8 +447,6 @@ public class TileBucketFiller extends TileMachine
         }
         CookTime = nbttagcompound.getShort("CookTime");
         RequiredCookTime = nbttagcompound.getShort("RequiredCookTime");
-        BucketQuantity = nbttagcompound.getShort("BucketQuantity");
-        NewBucket = nbttagcompound.getInteger("NewBucket");
         PowerFramework.currentFramework.loadPowerProvider(this, nbttagcompound);
         powerProvider.configure(20, 10, 10, 10, 100);
     }
@@ -479,8 +459,6 @@ public class TileBucketFiller extends TileMachine
         nbttagcompound.setTag("lSlot", NBTslot);
         nbttagcompound.setShort("CookTime", (short)CookTime);
         nbttagcompound.setShort("RequiredCookTime", (short)RequiredCookTime);
-        nbttagcompound.setInteger("NewBucket", NewBucket);
-        nbttagcompound.setShort("BucketQuantity", (short)BucketQuantity);
         PowerFramework.currentFramework.savePowerProvider(this, nbttagcompound);
 
         NBTTagList nbttaglist = new NBTTagList();
@@ -510,12 +488,6 @@ public class TileBucketFiller extends TileMachine
             case 3:
                 RequiredCookTime = j;
             break;  
-            case 4:
-                NewBucket = j;
-            break;  
-            case 5:
-                BucketQuantity = j;
-            break;  
         }
     }
 
@@ -525,8 +497,6 @@ public class TileBucketFiller extends TileMachine
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 1, slot.liquidId);
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 2, CookTime);
         iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 3, RequiredCookTime);
-        iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 4, NewBucket);
-        iCrafting.updateCraftingInventoryInfo(containerBucketFiller, 5, BucketQuantity);
     }
 
 	@Override
