@@ -42,7 +42,7 @@ public class ContainerBucketFiller extends BuildCraftContainer{
     
     @Override
     public void updateProgressBar(int i, int j) {		
-	tileBucketFiller.getGUINetworkData (i, j);
+    	tileBucketFiller.getGUINetworkData (i, j);
     }
 
     @Override

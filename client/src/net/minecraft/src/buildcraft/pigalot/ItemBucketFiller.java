@@ -24,19 +24,19 @@ public class ItemBucketFiller extends ItemBlock{
 	public String getItemNameIS(ItemStack itemstack) {
             String name = "";
             switch(itemstack.getItemDamage()) {
-            case 0: {
+            	case 0: {
                     name = "BucketFiller";
                     break;
-            }
-            case 1: {
+            	}
+            	case 1: {
                     name = "SelfPoweredBucketFiller"; 
                     break;
-            }
-            case 2: {
+            	}
+            	case 2: {
                     name = "WaterGenerator";
                     break;
-            }
-            default: name = "BucketFiller";
+            	}
+            	default: name = "BucketFiller";
             }
             return getItemName() + "." + name;
 	}
