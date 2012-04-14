@@ -5,7 +5,9 @@ import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.pigalot.*;
 import net.minecraft.src.forestry.api.ItemInterface;
 import net.minecraft.src.forge.Configuration;
+import net.minecraft.src.forge.MinecraftForge;
 import net.minecraft.src.forge.MinecraftForgeClient;
+import net.minecraft.src.forge.NetworkMod;
 import net.minecraft.src.forge.Property;
 import net.minecraft.src.ic2.api.Items;
 
@@ -13,7 +15,7 @@ import net.minecraft.src.ic2.api.Items;
  *
  * @author Pigalot
  */
-public class mod_jBuildCraft_BucketFiller extends BaseModMp {
+public class mod_jBuildCraft_BucketFiller extends NetworkMod {
     
     public static mod_jBuildCraft_BucketFiller instance;
     
@@ -44,13 +46,13 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         
         BucketFillerConfiguration = new Configuration(new File(CoreProxy.getBuildCraftBase(), "config/bucketfiller.cfg"));
         BucketFillerConfiguration.load();
-        Property BucketFillerId = BucketFillerConfiguration.getOrCreateIntProperty("BucketFiller.id",Configuration.BLOCK_PROPERTY, 175);
-        Property emptyBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("EmptyBucketEnergy",Configuration.GENERAL_PROPERTY, 20);
-        Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy",Configuration.GENERAL_PROPERTY, 25);
-        Property fillCellEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillCellEnergy",Configuration.GENERAL_PROPERTY, 30);
-		Property fillForestryEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillForestryEnergy", Configuration.GENERAL_PROPERTY, 30);
-        Property waterGeneratorEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("WaterGeneratorEnergy",Configuration.GENERAL_PROPERTY, 7);
-        Property BucketFillerGuiIdProperty = BucketFillerConfiguration.getOrCreateIntProperty("BucketFillerGuiId", Configuration.GENERAL_PROPERTY, 100);
+        Property BucketFillerId = BucketFillerConfiguration.getOrCreateIntProperty("BucketFiller.id", Configuration.CATEGORY_BLOCK, 175);
+        Property emptyBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("EmptyBucketEnergy", Configuration.CATEGORY_GENERAL, 20);
+        Property fillBucketEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillBucketEnergy", Configuration.CATEGORY_GENERAL, 25);
+        Property fillCellEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillCellEnergy", Configuration.CATEGORY_GENERAL, 30);
+        Property fillForestryEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("FillForestryEnergy", Configuration.CATEGORY_GENERAL, 30);
+        Property waterGeneratorEnergyProperty = BucketFillerConfiguration.getOrCreateIntProperty("WaterGeneratorEnergy", Configuration.CATEGORY_GENERAL, 7);
+        Property BucketFillerGuiIdProperty = BucketFillerConfiguration.getOrCreateIntProperty("BucketFillerGuiId", Configuration.CATEGORY_GENERAL, 103);
         BucketFillerConfiguration.save();
         
         blockBucketFiller = new BlockBucketFiller(Integer.parseInt(BucketFillerId.value)).setBlockName("BucketFiller");
@@ -108,7 +110,8 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
         {
         	bucketFillerGuiId = 103;
         }
-        ModLoaderMp.registerGUI(this,bucketFillerGuiId);
+
+		MinecraftForge.setGuiHandler(this, new GuiHandler());
         
         CraftingManager craftingmanager = CraftingManager.getInstance();
         craftingmanager.addRecipe(
@@ -208,21 +211,10 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
 
     @Override
     public String getVersion() {
-        return "2.2.13";
+        return "2.2.14";
     }
     
-    @Override
-    public GuiScreen handleGUI(int i) {
-        TileBucketFiller tile = new TileBucketFiller();
-		if(i == bucketFillerGuiId)
-		{
-		    return new GuiBucketFiller(ModLoader.getMinecraftInstance().thePlayer.inventory, tile);
-		}
-		else
-		{
-			return null;
-		}        
-    }
+
 
     @Override
     public String getPriorities() {
@@ -231,5 +223,15 @@ public class mod_jBuildCraft_BucketFiller extends BaseModMp {
 
     @Override
     public void load() {
+    }
+
+    @Override
+    public boolean clientSideRequired() {
+        return true;
+    }
+
+    @Override
+    public boolean serverSideRequired() {
+        return false;
     }
 }

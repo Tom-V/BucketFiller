@@ -8,6 +8,10 @@ import net.minecraft.src.BlockContainer;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
+import net.minecraft.src.mod_BuildCraftFactory;
+import net.minecraft.src.mod_jBuildCraft_BucketFiller;
+import net.minecraft.src.buildcraft.api.APIProxy;
+import net.minecraft.src.buildcraft.core.GuiIds;
 import net.minecraft.src.buildcraft.core.Utils;
 import net.minecraft.src.buildcraft.transport.ItemPipe;
 import net.minecraft.src.TileEntity;
@@ -54,12 +58,12 @@ public class BlockBucketFiller extends BlockContainer implements ITextureProvide
     	 	
         switch(world.getBlockMetadata(i,j,k)) {
             case 0:
-                TileBucketFiller tile = (TileBucketFiller) world.getBlockTileEntity(i, j, k);
-                PigalotProxie.displayGUIBucketFiller(entityplayer, tile);
+        		if(!APIProxy.isClient(world))
+        			entityplayer.openGui(mod_jBuildCraft_BucketFiller.instance, mod_jBuildCraft_BucketFiller.bucketFillerGuiId, world, i, j, k);
                 break;
             case 1:
-                tile = (TileSelfPoweredFiller) world.getBlockTileEntity(i, j, k);
-                PigalotProxie.displayGUIBucketFiller(entityplayer, tile);
+        		if(!APIProxy.isClient(world))
+        			entityplayer.openGui(mod_jBuildCraft_BucketFiller.instance, mod_jBuildCraft_BucketFiller.bucketFillerGuiId, world, i, j, k);
                 break;
             default:
                 return false;
