@@ -2,6 +2,11 @@ package net.minecraft.src.forestry.api.apiculture;
 
 import net.minecraft.src.forestry.api.INBTagable;
 
+/**
+ * Only the default implementation is supported.
+ * @author SirSengir
+ *
+ */
 public interface IGenome extends INBTagable {
 
 	IChromosome[] getChromosomes();

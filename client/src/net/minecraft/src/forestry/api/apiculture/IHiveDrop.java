@@ -2,6 +2,13 @@ package net.minecraft.src.forestry.api.apiculture;
 
 import net.minecraft.src.World;
 
+/**
+ * Bees can be seeded either as hive drops or as mutation results.
+ * 
+ * Add IHiveDrops to BeeManager.hiveDrops
+ * 
+ * @author SirSengir
+ */
 public interface IHiveDrop {
 	/**
 	 * See {@link IMutation} for template format.

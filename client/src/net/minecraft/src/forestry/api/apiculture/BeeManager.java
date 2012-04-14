@@ -8,6 +8,7 @@ import net.minecraft.src.forestry.api.ForestryAPI;
 public class BeeManager {
 	public static final int SPECIES_LIMIT = 128;
 	public static int speciesCount = 0;
+
 	public static IAllele[] alleleList = new IAllele[2048];
 
 	/**
@@ -28,8 +29,16 @@ public class BeeManager {
 	 * List of possible mutations on species alleles.
 	 */
 	public static ArrayList<IMutation> beeMutations = new ArrayList<IMutation>();
+	/**
+	 * Access to Forestry's breeding manager for breeding information.
+	 */
 	public static IBreedingManager breedingManager;
-
+	
+	/**
+	 * Access Forestry's default alleles via reflection.
+	 * @param ident
+	 * @return IAllele for the passed identifier or null if none was found.
+	 */
 	public static IAllele getAllele(String ident) {
 		IAllele allele = null;
 

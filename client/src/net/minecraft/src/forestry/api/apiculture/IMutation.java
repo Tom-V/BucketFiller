@@ -2,9 +2,22 @@ package net.minecraft.src.forestry.api.apiculture;
 
 import net.minecraft.src.World;
 
+/**
+ * Bees can be seeded either as hive drops or as mutation results.
+ * 
+ * Add mutations to BeeManager.beeMutations
+ * 
+ * @author SirSengir
+ */
 public interface IMutation {
 
+	/**
+	 * @return first of the alleles implementing IAlleleSpecies required for this mutation.
+	 */
 	IAllele getAllele0();
+	/**
+	 * @return second of the alleles implementing IAlleleSpecies required for this mutation.
+	 */
 	IAllele getAllele1();
 
 	/**
@@ -30,8 +43,13 @@ public interface IMutation {
 	 *  Make sure to return a proper array. Returning an allele of the wrong type will cause cast errors on runtime.
 	 *
 	 *  Alleles marked as customizable can be populated with your own custom alleles. Make sure to register them correctly in alleleList!
+<<<<<<< HEAD
+	 *  
+	 *  Other alleles must be populated with any matching pre-defined allele. Retrieve those via BeeManager.getAllele
+=======
 	 *
 	 *  Other alleles must be populated with any matching pre-defined allele.
+>>>>>>> master
 	 *
 	 */
 	IAllele[] getTemplate();

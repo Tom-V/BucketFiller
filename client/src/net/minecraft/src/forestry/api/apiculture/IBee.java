@@ -7,6 +7,10 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 import net.minecraft.src.forestry.api.INBTagable;
 
+/**
+ * Other implementations than Forestry's default one are not supported.
+ * @author SirSengir
+ */
 public interface IBee extends INBTagable {
 
 	boolean analyze();

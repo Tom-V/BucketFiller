@@ -1,5 +1,10 @@
 package net.minecraft.src.forestry.api.apiculture;
 
+/**
+ * Can be used to garner information on bee breeding and to register new bees.
+ * See {@link IBreedingManager}
+ *  @author SirSengir
+ */
 public interface IBreedingTracker {
 
 	void registerQueen(IBee bee);
