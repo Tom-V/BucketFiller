@@ -213,8 +213,6 @@ public class mod_jBuildCraft_BucketFiller extends NetworkMod {
     public String getVersion() {
         return "2.2.14";
     }
-    
-
 
     @Override
     public String getPriorities() {
