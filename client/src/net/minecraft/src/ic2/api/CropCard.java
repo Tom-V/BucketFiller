@@ -296,7 +296,7 @@ public abstract class CropCard
 	{
 		if (entity instanceof EntityLiving)
 		{
-			return ((EntityLiving)entity).isAirBorne || ((EntityLiving)entity).isSprinting();
+			return ((EntityLiving)entity).motionY < 0 || ((EntityLiving)entity).isSprinting();
 		}
 		return false;
 	}
@@ -449,7 +449,7 @@ public abstract class CropCard
 		for (ItemStack key : baseseeds.keySet()) 
 			if (key.itemID==stack.itemID && key.getItemDamage()==stack.getItemDamage()) return false;
 		
-		baseseeds.put(stack, new BaseSeed(id, size, growth, gain, resistance));
+		baseseeds.put(stack, new BaseSeed(id, size, growth, gain, resistance, stack.stackSize));
 		return true;
 	}
 	
@@ -463,7 +463,7 @@ public abstract class CropCard
 		for (ItemStack key : baseseeds.keySet())
 		{
 			if (key.itemID == stack.itemID &&
-					(key.getItemDamage()==-1 || key.getItemDamage()==stack.getItemDamage()))
+					(key.getItemDamage() == -1 || key.getItemDamage() == stack.getItemDamage()))
 			{
 				return baseseeds.get(key);
 			}

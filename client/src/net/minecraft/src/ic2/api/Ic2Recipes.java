@@ -228,7 +228,7 @@ public final class Ic2Recipes {
 		}
 	}
 
-	/**
+	/*
 	 * Reference scrap box chance values:
 	 * 
 	 * 0.1: Diamond

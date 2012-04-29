@@ -12,12 +12,15 @@ public class BaseSeed {
 	public int statGrowth;
 	public int statGain;
 	public int statResistance;
-	public BaseSeed(int id, int size, int statGrowth, int statGain, int statResistance) {
+	public int stackSize;
+	
+	public BaseSeed(int id, int size, int statGrowth, int statGain, int statResistance, int stackSize) {
 		super();
 		this.id = id;
 		this.size = size;
 		this.statGrowth = statGrowth;
 		this.statGain = statGain;
 		this.statResistance = statResistance;
+		this.stackSize = stackSize;
 	}
 }
